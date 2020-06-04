@@ -11,6 +11,7 @@
 
 #pragma once
 
+#include "Logger.hpp"
 #include <queue>
 #include <vector>
 #include <thread>
@@ -33,7 +34,9 @@ class SimpleThreadPool {
     ~Job(){};  // should not be deleted directly - use  release()
   };
 
-  SimpleThreadPool() : stopped_(true) {}
+  SimpleThreadPool() :
+    stopped_(true),
+    logger_(logging::getLogger("concord.simple-thread-pool")) {}
 
   /**
    * starts the thread pool with desired number of threads
@@ -74,6 +77,9 @@ class SimpleThreadPool {
   std::condition_variable queue_cond_;
   std::atomic_bool stopped_;
   std::vector<std::thread> threads_;
+
+ private:
+  logging::Logger logger_;
 };
 
 }  // namespace util
